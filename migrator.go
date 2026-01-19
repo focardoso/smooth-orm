@@ -2,7 +2,6 @@ package smooth
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"go.uber.org/zap"
@@ -92,14 +91,14 @@ func (m *Migrator) RunMigration(s Schema, identifier string, engine Engine) erro
 			},
 		},
 	})
-	if err == nil {
-		//Significa que já tem. Então já rodou
-		return nil
-	}
-
-	if !errors.Is(ErrRecordNotFound, err) {
+	if err != nil {
 		// Significa que deu algum error
 		return err
+	}
+
+	if mig != nil {
+		//Significa que já tem. Então já rodou
+		return nil
 	}
 
 	//Executar Migration
